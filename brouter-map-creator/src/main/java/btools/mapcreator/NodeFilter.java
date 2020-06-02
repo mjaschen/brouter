@@ -41,14 +41,14 @@ public class NodeFilter extends MapCreatorBase
   public void process( File nodeTilesIn, File wayFileIn, File nodeTilesOut ) throws Exception
   {
     init();
-  
+
     this.nodeTilesOut = nodeTilesOut;
 
     // read the wayfile into a bitmap of used nodes
     new WayIterator( this, false ).processFile( wayFileIn );
 
     // finally filter all node files
-    new NodeIterator( this, true ).processDir( nodeTilesIn, ".tls" );
+    new NodeIterator( this, true ).processDir( nodeTilesIn, ".ntl" );
   }
 
   @Override
