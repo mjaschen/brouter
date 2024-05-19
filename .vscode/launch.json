@@ -1,0 +1,223 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "BRouter Server",
+            "request": "launch",
+            "mainClass": "btools.server.RouteServer",
+            "args": [
+                "../data/build",
+                "../brouter-profiles",
+                "../brouter-custom-profiles",
+                17777,
+                1,
+            ],
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "MAX_RUNNING_TIME": 20,
+                "JAVA_OPT_MX": "1024m",
+                "JAVA_OPT_MS": "1024m",
+                "JAVA_OPT_MN": "128m",
+            },
+        },
+        {
+            "type": "java",
+            "name": "IntegrityCheckProfile",
+            "request": "launch",
+            "mainClass": "btools.expressions.IntegrityCheckProfile",
+            "projectName": "brouter-expressions"
+        },
+        {
+            "type": "java",
+            "name": "ProfileComparator",
+            "request": "launch",
+            "mainClass": "btools.expressions.ProfileComparator",
+            "projectName": "brouter-expressions"
+        },
+        {
+            "type": "java",
+            "name": "CreateElevationRasterImage",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.CreateElevationRasterImage",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "DatabasePseudoTagProvider",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.DatabasePseudoTagProvider",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "ElevationRasterTileConverter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.ElevationRasterTileConverter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "HgtReader",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.HgtReader",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "NodeCutter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.NodeCutter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "NodeFilter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.NodeFilter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "OsmCutter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.OsmCutter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "OsmFastCutter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.OsmFastCutter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "PosUnifier",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.PosUnifier",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "RelationMerger",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.RelationMerger",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "RelationStatistics",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.RelationStatistics",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "WayCutter",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.WayCutter",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "WayCutter5",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.WayCutter5",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "WayLinker",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.WayLinker",
+            "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "OsmNodesMap",
+            "request": "launch",
+            "mainClass": "btools.mapaccess.OsmNodesMap",
+            "projectName": "brouter-mapaccess"
+        },
+        {
+            "type": "java",
+            "name": "PhysicalFile",
+            "request": "launch",
+            "mainClass": "btools.mapaccess.PhysicalFile",
+            "projectName": "brouter-mapaccess"
+        },
+        {
+            "type": "java",
+            "name": "Rd5DiffManager",
+            "request": "launch",
+            "mainClass": "btools.mapaccess.Rd5DiffManager",
+            "projectName": "brouter-mapaccess"
+        },
+        {
+            "type": "java",
+            "name": "Rd5DiffTool",
+            "request": "launch",
+            "mainClass": "btools.mapaccess.Rd5DiffTool",
+            "projectName": "brouter-mapaccess"
+        },
+        {
+            "type": "java",
+            "name": "Rd5DiffValidator",
+            "request": "launch",
+            "mainClass": "btools.mapaccess.Rd5DiffValidator",
+            "projectName": "brouter-mapaccess"
+        },
+        {
+            "type": "java",
+            "name": "Area",
+            "request": "launch",
+            "mainClass": "btools.server.Area",
+            "projectName": "brouter-server"
+        },
+        {
+            "type": "java",
+            "name": "BRouter",
+            "request": "launch",
+            "mainClass": "btools.server.BRouter",
+            "projectName": "brouter-server"
+        },
+        {
+            "type": "java",
+            "name": "CgiUpload",
+            "request": "launch",
+            "mainClass": "btools.server.CgiUpload",
+            "projectName": "brouter-server"
+        },
+        {
+            "type": "java",
+            "name": "RouteServer",
+            "request": "launch",
+            "mainClass": "btools.server.RouteServer",
+            "projectName": "brouter-server"
+        },
+        {
+            "type": "java",
+            "name": "BitCoderContext",
+            "request": "launch",
+            "mainClass": "btools.util.BitCoderContext",
+            "projectName": "brouter-util"
+        },
+        {
+            "type": "java",
+            "name": "StackSampler",
+            "request": "launch",
+            "mainClass": "btools.util.StackSampler",
+            "projectName": "brouter-util"
+        }
+    ]
+}
