@@ -30,7 +30,7 @@ public class ElevationRasterCoder {
     _encodeRaster(raster, os);
     long t1 = System.currentTimeMillis();
 
-    System.out.println("finished encoding in " + (t1 - t0) + " ms");
+    System.out.println("✅ finished encoding in " + (t1 - t0) + " ms");
   }
 
   public ElevationRaster decodeRaster(InputStream is) throws IOException {
@@ -53,7 +53,7 @@ public class ElevationRasterCoder {
     raster.usingWeights = false; // raster.ncols > 6001;
 
     long t1 = System.currentTimeMillis();
-    System.out.println("finished decoding in " + (t1 - t0) + " ms ncols=" + raster.ncols + " nrows=" + raster.nrows);
+    System.out.println("✅ finished decoding in " + (t1 - t0) + " ms ncols=" + raster.ncols + " nrows=" + raster.nrows);
     return raster;
   }
 

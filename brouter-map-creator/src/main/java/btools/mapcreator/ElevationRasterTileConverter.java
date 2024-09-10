@@ -19,7 +19,7 @@ import java.util.zip.ZipInputStream;
 
 public class ElevationRasterTileConverter {
 
-  public static final boolean DEBUG = false;
+  public static final boolean DEBUG = true;
 
   public static final short NODATA2 = -32767; // hgt-formats nodata
   public static final short NODATA = Short.MIN_VALUE;
@@ -101,13 +101,15 @@ public class ElevationRasterTileConverter {
     String filename30;
     for (int ilon_base = -180; ilon_base < 180; ilon_base += 5) {
       for (int ilat_base = 85; ilat_base > -90; ilat_base -= 5) {
+        String latLngString = " (lat/lng = " + ilat_base + "/" + ilon_base + ")";
         if (PosUnifier.UseRasterRd5FileName) {
           filename30 = genFilenameRd5(ilon_base, ilat_base);
         } else {
           filename30 = genFilenameOld(ilon_base, ilat_base);
         }
-        if (DEBUG)
-          System.out.println("lidar convert all: " + filename30);
+        if (DEBUG) {
+          System.out.println("Processing for target file " + filename30 + latLngString);
+        }
         doConvert(hgtdata, ilon_base, ilat_base, outdir + "/" + filename30, row_length, hgtfallbackdata);
       }
     }
@@ -325,15 +327,18 @@ public class ElevationRasterTileConverter {
         for (int lonIdx = 0; lonIdx < 5; lonIdx++) {
           int lonDegree = lonDegreeStart + lonIdx;
 
+          String latLString = " (lat/lng = " + latDegree + "/" + lonDegree + ")";
           filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".zip";
           File f = new File(filename);
           if (f.exists() && f.length() > 0) {
+            System.out.println("  ✓ found zipped hgt: " + filename + latLString);
             hgtfound = true;
             break;
           }
           filename = filename.substring(0, filename.length() - 4) + ".hgt";
           f = new File(filename);
           if (f.exists() && f.length() > 0) {
+            System.out.println("  ✓ found hgt: " + filename + latLString);
             hgtfound = true;
             break;
           }
@@ -343,6 +348,7 @@ public class ElevationRasterTileConverter {
         filename = inputDir + "/" + genFilenameOld(lonDegreeStart, latDegreeStart).substring(0, 10) + ".zip";
         File f = new File(filename);
         if (f.exists() && f.length() > 0) {
+          System.out.println("  ✓ found zipped 5x5 ASCII file: " + filename + " (lat/lng = " + latDegreeStart + "/" + lonDegreeStart + ")");
           ascfound = true;
         }
       }
@@ -355,8 +361,9 @@ public class ElevationRasterTileConverter {
       // prefill as NODATA
       Arrays.fill(imagePixels, NODATA);
     } else if (!ascfound) {
-      if (DEBUG)
-        System.out.println("none data: " + lonDegreeStart + " " + latDegreeStart);
+      if (DEBUG) {
+        System.out.println("  ❗no data found for lng/lat: " + " (lat/lng = " + latDegreeStart + "/" + lonDegreeStart + ")");
+      }
       return;
     }
 
@@ -369,11 +376,12 @@ public class ElevationRasterTileConverter {
           int lonDegree = lonDegreeStart + lonIdx;
           int colOffset = extraBorder + lonIdx * row_length;
 
+          String latLngString = " (lat/lng = " + latDegree + "/" + lonDegree + ")";
           filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".zip";
           File f = new File(filename);
           if (f.exists() && f.length() > 0) {
             if (DEBUG)
-              System.out.println("exist: " + filename);
+              System.out.println("  ⚙️ using zipped hgt file: " + filename + latLngString);
             readHgtZip(filename, rowOffset, colOffset, row_length + 1, 1);
             continue;
           }
@@ -381,7 +389,7 @@ public class ElevationRasterTileConverter {
           f = new File(filename);
           if (f.exists() && f.length() > 0) {
             if (DEBUG)
-              System.out.println("exist: " + filename);
+              System.out.println("  ⚙️ using hgt file: " + filename + latLngString);
             readHgtFile(f, rowOffset, colOffset, row_length + 1, 1);
             continue;
           } else {
@@ -389,16 +397,18 @@ public class ElevationRasterTileConverter {
               filename = hgtfallbackdata + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".hgt";
               f = new File(filename);
               if (f.exists() && f.length() > 0) {
+                System.out.println("  ⚙️ using fallback data: " + filename + latLngString);
                 readHgtFile(f, rowOffset, colOffset, SRTM3_ROW_LENGTH + 1, 3);
                 continue;
               }
               filename = filename.substring(0, filename.length() - 4) + ".zip";
               f = new File(filename);
               if (f.exists() && f.length() > 0) {
+                System.out.println("  ⚙️ using zipped fallback data: " + filename + latLngString);
                 readHgtZip(filename, rowOffset, colOffset, SRTM3_ROW_LENGTH + 1, 3);
               } else {
                 if (DEBUG)
-                  System.out.println("none : " + filename);
+                  System.out.println("  no primary data and no fallback found: " + filename + latLngString);
               }
             }
 
