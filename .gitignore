@@ -20,3 +20,4 @@ misc/customprofiles
 .classpath
 .project
 !/.idea/runConfigurations
+*.class
