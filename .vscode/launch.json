@@ -32,6 +32,34 @@
         },
         {
             "type": "java",
+            "name": "Build DTM Data",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.ElevationRasterTileConverter",
+            "projectName": "brouter-map-creator",
+            "args": [
+                "all",
+                "/Volumes/VICTORIA/brouter-data/srtm-dtm-europe-sonny-v24-2024-12-05",
+                "/Volumes/VICTORIA/brouter-data/srtm1-build",
+                "1",
+                "/Volumes/VICTORIA/brouter-data/srtm3"
+            ],
+        },
+        {
+            "type": "java",
+            "name": "Build DTM Data - Single File Fallback ASC",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.ElevationRasterTileConverter",
+            "projectName": "brouter-map-creator",
+            "args": [
+                "srtm_40_04",
+                "/Volumes/VICTORIA/brouter-data/srtm-dtm-europe-sonny-v24-2024-12-05",
+                "/Volumes/VICTORIA/brouter-data/srtm1-build",
+                "1",
+                "/Volumes/VICTORIA/brouter-data/srtm3"
+            ],
+        },
+        {
+            "type": "java",
             "name": "IntegrityCheckProfile",
             "request": "launch",
             "mainClass": "btools.expressions.IntegrityCheckProfile",
@@ -50,6 +78,24 @@
             "request": "launch",
             "mainClass": "btools.mapcreator.CreateElevationRasterImage",
             "projectName": "brouter-map-creator"
+        },
+        {
+            "type": "java",
+            "name": "CreateElevationRasterImage Debug Fallback SRTM1",
+            "request": "launch",
+            "mainClass": "btools.mapcreator.CreateElevationRasterImage",
+            "projectName": "brouter-map-creator",
+            "args": [
+                "19.835129",
+                "41.336089",
+                "/Volumes/VICTORIA/brouter-data/srtm1-build",
+                "srtm_40_04-srtm1.png",
+                "3600",
+                "3600",
+                "1",
+                "bef",
+                "colors.csv",
+            ],
         },
         {
             "type": "java",
