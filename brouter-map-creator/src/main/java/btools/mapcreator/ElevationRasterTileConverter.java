@@ -183,7 +183,7 @@ public class ElevationRasterTileConverter {
     throws Exception {
 
     if (DEBUG)
-      System.out.println("read: " + file + " " + row_length);
+      System.out.println("read: " + file + ", row length=" + row_length + ", scale=" + scale);
 
     FileInputStream fis = new FileInputStream(file);
     try {
@@ -322,34 +322,45 @@ public class ElevationRasterTileConverter {
     {
       // check for sources w/o border
       for (int latIdx = 0; latIdx < 5; latIdx++) {
+        System.out.println("  → checking for sources, latIdx=" + latIdx);
         int latDegree = latDegreeStart + latIdx;
 
         for (int lonIdx = 0; lonIdx < 5; lonIdx++) {
+          hgtfound = false;
+          ascfound = false;
+          System.out.println("    → checking for sources, lonIdx=" + lonIdx);
           int lonDegree = lonDegreeStart + lonIdx;
 
           String latLString = " (lat/lng = " + latDegree + "/" + lonDegree + ")";
           filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".zip";
           File f = new File(filename);
           if (f.exists() && f.length() > 0) {
-            System.out.println("  ✓ found zipped hgt: " + filename + latLString);
+            System.out.println("    ✓ found zipped hgt: " + filename + latLString);
             hgtfound = true;
             break;
+          } else {
+            System.out.println("    ! zipped hgt not found: " + filename + latLString);
           }
           filename = filename.substring(0, filename.length() - 4) + ".hgt";
           f = new File(filename);
           if (f.exists() && f.length() > 0) {
-            System.out.println("  ✓ found hgt: " + filename + latLString);
+            System.out.println("    ✓ found hgt: " + filename + latLString);
             hgtfound = true;
             break;
+          } else {
+            System.out.println("    ! hgt not found: " + filename + latLString);
           }
-        }
-      }
-      if (!hgtfound) {
-        filename = inputDir + "/" + genFilenameOld(lonDegreeStart, latDegreeStart).substring(0, 10) + ".zip";
-        File f = new File(filename);
-        if (f.exists() && f.length() > 0) {
-          System.out.println("  ✓ found zipped 5x5 ASCII file: " + filename + " (lat/lng = " + latDegreeStart + "/" + lonDegreeStart + ")");
-          ascfound = true;
+
+          if (!hgtfound) {
+            filename = inputDir + "/" + genFilenameOld(lonDegreeStart, latDegreeStart).substring(0, 10) + ".zip";
+            f = new File(filename);
+            if (f.exists() && f.length() > 0) {
+              System.out.println("    ✓ found zipped 5x5 ASCII file: " + filename + " (lat/lng = " + latDegreeStart + "/" + lonDegreeStart + ")");
+              ascfound = true;
+            } else {
+              System.out.println("    × zipped 5x5 ASCII file not found: " + filename + " (lat/lng = " + latDegreeStart + "/" + lonDegreeStart + ")");
+            }
+          }
         }
       }
     }
@@ -396,15 +407,17 @@ public class ElevationRasterTileConverter {
             if (hgtfallbackdata != null) {
               filename = hgtfallbackdata + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".hgt";
               f = new File(filename);
+              System.out.println("  → trying fallback data file: " + filename + latLngString);
               if (f.exists() && f.length() > 0) {
-                System.out.println("  ⚙️ using fallback data: " + filename + latLngString);
+                System.out.println("    ⚙️ using fallback data: " + filename + latLngString);
                 readHgtFile(f, rowOffset, colOffset, SRTM3_ROW_LENGTH + 1, 3);
                 continue;
               }
               filename = filename.substring(0, filename.length() - 4) + ".zip";
               f = new File(filename);
+              System.out.println("  → trying zipped fallback data: " + filename + latLngString);
               if (f.exists() && f.length() > 0) {
-                System.out.println("  ⚙️ using zipped fallback data: " + filename + latLngString);
+                System.out.println("    ⚙️ using zipped fallback data: " + filename + latLngString);
                 readHgtZip(filename, rowOffset, colOffset, SRTM3_ROW_LENGTH + 1, 3);
               } else {
                 if (DEBUG)
