@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -142,6 +143,15 @@ public class ElevationRasterTileConverter {
     }
   }
 
+  private void readHgtGzip(String filename, int rowOffset, int colOffset, int row_length, int scale) throws Exception {
+    GZIPInputStream gis = new GZIPInputStream(new BufferedInputStream(new FileInputStream(filename)));
+    try {
+      readHgtFromStream(gis, rowOffset, colOffset, row_length, scale);
+    } finally {
+      gis.close();
+    }
+  }
+
   private void readHgtFromStream(InputStream is, int rowOffset, int colOffset, int rowLength, int scale)
     throws Exception {
     DataInputStream dis = new DataInputStream(new BufferedInputStream(is));
@@ -153,6 +163,17 @@ public class ElevationRasterTileConverter {
 
         int i1 = dis.read(); // msb first!
         int i0 = dis.read();
+
+        /*
+        short val = -127;
+        if (i0 == -1 || i1 == -1)
+          val = NODATA;
+          // throw new RuntimeException("unexpected end of file reading hgt entry!");
+
+          if (val == -127) {
+            val = (short) ((i1 << 8) | i0);
+            }
+            */
 
         if (i0 == -1 || i1 == -1)
           throw new RuntimeException("unexpected end of file reading hgt entry!");
@@ -333,6 +354,11 @@ public class ElevationRasterTileConverter {
 
           String latLString = " (lat/lng = " + latDegree + "/" + lonDegree + ")";
           filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".zip";
+
+          // 1. Check N**E***.zip (→ Sonny's Lidar DTM)
+          // 2. Check N**E***.hgt.gz (→ Mapzen SRTM1 data)
+          // 3. Check N**E***.hgt (→ other HGT data)
+
           File f = new File(filename);
           if (f.exists() && f.length() > 0) {
             System.out.println("    ✓ found zipped hgt: " + filename + latLString);
@@ -341,6 +367,19 @@ public class ElevationRasterTileConverter {
           } else {
             System.out.println("    ! zipped hgt not found: " + filename + latLString);
           }
+
+          // Mapzen SRTM1 data
+          filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".hgt.gz";
+          System.out.println("    ✓ Checking for gzipped hgt: " + filename + latLString);
+          f = new File(filename);
+          if (f.exists() && f.length() > 0) {
+            System.out.println("    ✓ found gzipped hgt: " + filename + latLString);
+            hgtfound = true;
+            break;
+          } else {
+            System.out.println("    ! gzipped hgt not found: " + filename + latLString);
+          }
+
           filename = filename.substring(0, filename.length() - 4) + ".hgt";
           f = new File(filename);
           if (f.exists() && f.length() > 0) {
@@ -388,6 +427,7 @@ public class ElevationRasterTileConverter {
           int colOffset = extraBorder + lonIdx * row_length;
 
           String latLngString = " (lat/lng = " + latDegree + "/" + lonDegree + ")";
+
           filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".zip";
           File f = new File(filename);
           if (f.exists() && f.length() > 0) {
@@ -396,6 +436,17 @@ public class ElevationRasterTileConverter {
             readHgtZip(filename, rowOffset, colOffset, row_length + 1, 1);
             continue;
           }
+
+          // Mapzen SRTM1 data
+          filename = inputDir + "/" + formatLat(latDegree) + formatLon(lonDegree) + ".hgt.gz";
+          f = new File(filename);
+          if (f.exists() && f.length() > 0) {
+            if (DEBUG)
+              System.out.println("  ⚙️ using gzipped hgt file: " + filename + latLngString);
+            readHgtGzip(filename, rowOffset, colOffset, row_length + 1, 1);
+            continue;
+          }
+
           filename = filename.substring(0, filename.length() - 4) + ".hgt";
           f = new File(filename);
           if (f.exists() && f.length() > 0) {
