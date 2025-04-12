@@ -116,6 +116,37 @@ Some variable names are pre-defined and accessed by the routing engine:
        table exported as CSV. Setting it to true/1, Brouter-web Data page will
        list all tags present in the RD5 file.
 
+    - `use_dynamic_range` default=true
+
+       To find the start / end points for a route, BRouter normally uses for all
+       waypoint matches the dynamic range logic instead of the variable
+       `waypointCatchingRange` with a default value of 250 m. In some
+       situations, adding a few meters here is not enough to find a point.
+       With this new variable, it goes deeper and could reach a radius of about 50 km.
+
+    - `add_beeline` default=false
+
+       This enables on dynamic range search the output for the more distant road connection
+       as a beeline.
+       This is helpful in areas with less road coverage like in the Arabic world or
+       similar areas.
+
+    - `check_start_way`  default=false
+
+       This could help to find a better starting point for a route. Some ways, such as
+       highways or ferries, may be excluded as a starting point.
+
+       This needs new defines in profile:
+
+       `assign check_start_way     = true   # %check_start_way% | Activate a test for the starting way | boolean | noStartWay=route,ferry;highway,motorway;highway,motorway_link`
+
+       The first is standard: define a variable and its value, then the block for
+       description and variable type.
+       New is an additional block with information on the excluded ways, a list with
+       name `noStartWay` and `name,value;...` entries.
+
+
+
 - for the way section these are
 
   - `turncost`

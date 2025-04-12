@@ -160,8 +160,8 @@ public class RouteServer extends Thread implements Comparable<RouteServer> {
       } else if (url.startsWith(PROFILE_UPLOAD_URL)) {
         if (getline.startsWith("OPTIONS")) {
           // handle CORS preflight request (Safari)
-          String corsHeaders = "Access-Control-Allow-Methods: GET, POST\n"
-            + "Access-Control-Allow-Headers: Content-Type\n";
+          String corsHeaders = "Access-Control-Allow-Methods: GET, POST\r\n"
+            + "Access-Control-Allow-Headers: Content-Type\r\n";
           writeHttpHeader(bw, "text/plain", null, corsHeaders, HTTP_STATUS_OK);
           bw.flush();
           return;
@@ -220,9 +220,10 @@ public class RouteServer extends Thread implements Comparable<RouteServer> {
           // no zip for this engineMode
           encodings = null;
         }
-        String headers = encodings == null || encodings.indexOf("gzip") < 0 ? null : "Content-Encoding: gzip\n";
+        String headers = encodings == null || encodings.indexOf("gzip") < 0 ? null : "Content-Encoding: gzip\r\n";
         writeHttpHeader(bw, handler.getMimeType(), handler.getFileName(), headers, HTTP_STATUS_OK);
-        if (engineMode == 0) {
+        if (engineMode == RoutingEngine.BROUTER_ENGINEMODE_ROUTING ||
+            engineMode == RoutingEngine.BROUTER_ENGINEMODE_ROUNDTRIP) {
           if (track != null) {
             if (headers != null) { // compressed
               ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -235,7 +236,8 @@ public class RouteServer extends Thread implements Comparable<RouteServer> {
               bw.write(handler.formatTrack(track));
             }
           }
-        } else if (engineMode == 2) {
+        } else if (engineMode == RoutingEngine.BROUTER_ENGINEMODE_GETELEV ||
+                   engineMode == RoutingEngine.BROUTER_ENGINEMODE_GETINFO) {
           String s = cr.getFoundInfo();
           if (s != null) {
             bw.write(s);
@@ -405,17 +407,17 @@ public class RouteServer extends Thread implements Comparable<RouteServer> {
 
   private static void writeHttpHeader(BufferedWriter bw, String mimeType, String fileName, String headers, String status) throws IOException {
     // http-header
-    bw.write(String.format("HTTP/1.1 %s\n", status));
-    bw.write("Connection: close\n");
-    bw.write("Content-Type: " + mimeType + "; charset=utf-8\n");
+    bw.write(String.format("HTTP/1.1 %s\r\n", status));
+    bw.write("Connection: close\r\n");
+    bw.write("Content-Type: " + mimeType + "; charset=utf-8\r\n");
     if (fileName != null) {
-      bw.write("Content-Disposition: attachment; filename=\"" + fileName + "\"\n");
+      bw.write("Content-Disposition: attachment; filename=\"" + fileName + "\"\r\n");
     }
-    bw.write("Access-Control-Allow-Origin: *\n");
+    bw.write("Access-Control-Allow-Origin: *\r\n");
     if (headers != null) {
       bw.write(headers);
     }
-    bw.write("\n");
+    bw.write("\r\n");
   }
 
   private static void cleanupThreadQueue(Queue<RouteServer> threadQueue) {

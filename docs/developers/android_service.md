@@ -87,7 +87,7 @@ Another variant is to send parameters for an existing profile that are different
 With the version  1.7.1 it is possible to collect parameters from the profile.
 The variable parameters are defined like this
 ```
-assign avoid_path            = false  # %avoid_path% | Set to true to avoid pathes | boolean
+assign avoid_path            = false  # %avoid_path% | Set to true to avoid paths | boolean
 ```
 You probably know that from the web client, it builds an option dialog for this.
 Now you could do that with an calling app.
@@ -131,4 +131,8 @@ This suppress the first question after installation for the BRouter path, genera
 
 ### get elevation
 
-"engineMode=2" allows a client to only request an elevation for a point. This can be restricted with "waypointCatchingRange".
+"engineMode=2" allows a client to request only an elevation for a point. This can be restricted with "waypointCatchingRange".
+
+### get info
+
+"engineMode=3" allows a client to request the description tags for  a segment. This can be restricted with "waypointCatchingRange".
